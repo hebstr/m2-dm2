@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
+
+@font-face {
+  font-family: "Luciole";
+  font-style: normal;
+  font-weight: normal;
+  src: url('fonts/Luciole-Regular/Luciole-Regular.woff2') format("woff2") tech(variations);
+  text-rendering: optimizeLegibility;
+	size-adjust: 95%;
+}
+
+@font-face {
+  font-family: "Luciole";
+  font-style: bold;
+  font-weight: bold;
+  src: url('fonts/Luciole-Bold/Luciole-Bold.woff2') format("woff2") tech(variations);
+  text-rendering: optimizeLegibility;
+	size-adjust: 95%;
+}

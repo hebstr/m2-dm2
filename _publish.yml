@@ -1,0 +1,4 @@
+- source: index.qmd
+  quarto-pub:
+    - id: 80bd2379-6262-420b-9f01-86d60c6695f3
+      url: 'https://hebstr.quarto.pub/m2_dm2'

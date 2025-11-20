@@ -1,0 +1,51 @@
+title: hebstr-template
+author: hebstr
+version: 0.9.0
+quarto-required: ">=1.7.0"
+contributes:
+  formats:
+    common:
+      lang: fr
+      number-sections: true
+      number-depth: 4
+      toc: true
+      toc-depth: 4
+      colorlinks: true
+      default-image_extension: png
+      crossref:
+        title-delim: "\\."
+        tbl-title: "Tableau"
+      tbl-cap-location: top
+      fig-cap-location: bottom
+      callout-appearance: simple
+      fig-align: center
+      knitr:
+        opts_chunk:
+          collapse: true
+          comment: "#>"
+          echo: false
+          message: false
+          warning: false
+    html:
+      embed-resources: true
+      date: last-modified
+      published-title: "dernière mise à jour"
+      toc-expand: true
+      code-link: true
+      code-fold: true
+      code-copy: hover
+      html-table-processing: none
+      theme: resources/style.scss
+      css: resources/fonts.css
+      lightbox: true
+    typst:
+      papersize: a4
+      margin:
+        x: 1.5cm
+        y: 1.5cm
+      fontsize: 10pt
+      keep-typ: false
+      include-in-header: resources/template.typ
+    docx:
+      reference-doc: resources/chazard.dotx
+      number-sections: false
