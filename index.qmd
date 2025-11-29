@@ -13,7 +13,9 @@ filters:
   - add-code-files
 
 format:
-  hebstr-template-html: default
+  hebstr-template-html:
+    code-tools:
+      source: https://codeberg.org/hebstr/m2_dm2/src/branch/main/
   hebstr-template-typst: default
 ---
 
