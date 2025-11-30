@@ -1,0 +1,90 @@
+div.sourceCode {
+  background-color: #1e0e26 !important;
+  color: #fff;
+  border-top: 1px solid #1e0e26;
+  border-radius: 10px;
+  padding: 1em;
+  margin: 1em 0;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+code span.va {
+  color: #FFF;
+}
+
+code span.dv,
+code span.fl {
+  color: #ff7869;
+}
+
+code span.cn {
+  color: #ffbc6a;
+  font-weight: bold;
+}
+
+code span.st {
+  color: #c5ff93;
+}
+
+code span.op,
+code span.ot,
+code span.sc {
+  color: #a2fff6;
+  font-weight: normal;
+}
+
+code span.kw,
+code span.cf {
+  color: #d08aff;
+  font-weight: bold;
+}
+
+code span.fu {
+  color: #a2fff6;
+}
+
+code span.co,
+code span.do {
+  color: #7d2fa3;
+}
+
+code span.at {
+  color: #fff;
+}
+
+.code-copy-button,
+.code-copy-button:hover {
+  background-color: #341646;
+  border-radius: 6px;
+}
+
+div.sourceCode ::selection {
+  background-color: #7d2fa3;
+  color: #fff;
+}
+
+pre > code.sourceCode > span {
+  background-color: #1e0e26;
+  color: #fff;
+}
+
+div[data-code-filename] summary {
+  color: #fff;
+  background-color: #1e0e26;
+  margin-bottom: 0;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  border-bottom: 0;
+}
+
+div[data-code-filename] details[open] summary {
+  background-color: #14091b;
+  color: #7d2fa3;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+pre > code.sourceCode > span > a {
+  color: #7d2fa3;
+}

@@ -1,19 +1,3 @@
-library(tidyverse)
-library(rlang)
-library(glue)
-library(labelled)
-library(gtsummary)
-library(gt)
-library(scales)
-library(broom.mixed)
-library(survival)
-library(ggsurvfit)
-library(hebstr)
-
-update_geom_defaults("text", list(family = "Luciole"))
-
-lang_fr()
-
 ### OPTS -----------------------------------------------------------------------
 
 set_opts(
@@ -151,4 +135,4 @@ lst(base = .base$scl,
 
 ### AUTO EXEC ------------------------------------------------------------------
 
-auto_exec()
+# auto_exec()

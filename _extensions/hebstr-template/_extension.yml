@@ -31,12 +31,12 @@ contributes:
       date: last-modified
       published-title: "dernière mise à jour"
       toc-expand: true
-      code-link: true
+      code-link: false
       code-fold: true
       code-copy: hover
       html-table-processing: none
       theme: resources/style.scss
-      css: resources/fonts.css
+      css: [resources/fonts.css, resources/code-dark.css]
       lightbox: true
     typst:
       papersize: a4

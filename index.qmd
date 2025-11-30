@@ -27,7 +27,9 @@ library(knitr)
 
 quiet <- TRUE
 
-source("scripts/_setup.R")
+conflicted::conflict_prefer("filter", "dplyr")
+
+source(here::here("scripts", "_setup.R"))
 
 auto_exec()
 
