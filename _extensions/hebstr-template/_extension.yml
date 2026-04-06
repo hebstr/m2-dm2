@@ -35,15 +35,22 @@ contributes:
       code-fold: true
       code-copy: hover
       html-table-processing: none
-      theme: resources/style.scss
-      css: [resources/fonts.css, resources/code-dark.css]
+      html-math-method: plain
+      theme: theme.scss
+      css: resources/fonts.css
       lightbox: true
+      grid:
+        sidebar-width: 0px
+        body-width: 1100px
+        margin-width: 600px
+        gutter-width: 2rem
     typst:
+      mainfont: "Luciole"
+      font-paths: resources/fonts
       papersize: a4
       margin:
         x: 1.5cm
         y: 1.5cm
-      fontsize: 10pt
       keep-typ: false
       include-in-header: resources/template.typ
     docx:

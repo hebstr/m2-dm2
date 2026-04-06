@@ -59,11 +59,13 @@ inset: 8pt,
 #show math.equation: set text(font: "New Computer Modern Math")
 
 // Style des blocs de code
+#set raw(theme: "_extensions/hebstr-template/resources/code.tmTheme")
+
 #show raw.where(block: true): block.with(
-fill: luma(246),
-inset: 10pt,
-radius: 4pt,
-stroke: 0.5pt + luma(200),
+  fill: rgb("#291334"),
+  inset: 10pt,
+  radius: 5pt,
+  width: 100%,
 )
 
 // Style des liens

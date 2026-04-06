@@ -1,5 +1,5 @@
-source("~/.Rprofile")
 source("renv/activate.R")
+source("~/.Rprofile")
 
 # renv::install("~/Documents/pro/r_pkg/pkg_hebstr/", prompt = F)
 

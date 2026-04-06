@@ -1,4 +1,4 @@
-hdrs$visit$str |>
+fig_corr <- hdrs$visit$str |>
   map(
 		~ scl$join |>
 			filter(visit == .) |>
@@ -16,5 +16,6 @@ hdrs$visit$str |>
 		width = 400,
 		palette = with(opts$color, c(warm[2], cold[2])),
 		arrange = TRUE
-	) |>
-  easy_out("fig_corr")
+	)
+
+easy_out(fig_corr)
