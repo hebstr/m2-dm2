@@ -10,29 +10,25 @@ set_opts(
   )
 )
 
-### LOAD -----------------------------------------------------------------------
+### IMPORT ---------------------------------------------------------------------
 
 easy_read <- \(x) {
-
   glue("data/{x}.xls") |>
     readxl::read_excel(na = c("", "ND")) |>
     set_names(tolower) |>
     mutate(numero = factor(numero))
-
 }
 
 easy_pca <- \(x) {
-
   x |>
     unite("numero_visit", c(numero, visit)) |>
     column_to_rownames("numero_visit") |>
     drop_na() |>
     prcomp(scale = TRUE)
-
 }
 
 .base <-
-c("hdrs", "scl") |>
+  c("hdrs", "scl") |>
   set_names() |>
   map(
     ~ easy_read(.) |>
@@ -44,19 +40,19 @@ c("hdrs", "scl") |>
 ### HDRS -----------------------------------------------------------------------
 
 set_hdrs <- \(.visit = NULL) {
-
   .hdrs <-
-  .base$hdrs |>
+    .base$hdrs |>
     mutate(
       hamd16 = coalesce(hamd16a, hamd16b),
       .keep = "unused",
       .after = hamd15
     )
 
-  if (!is_null(.visit)) .hdrs <- .hdrs |> filter(visit %in% .visit)
+  if (!is_null(.visit)) {
+    .hdrs <- .hdrs |> filter(visit %in% .visit)
+  }
 
   return(.hdrs)
-
 }
 
 hdrs <- lst(
@@ -67,21 +63,19 @@ hdrs <- lst(
   item = map(set_names(visit$str), set_hdrs),
   pct = map_df(item, ~ label_p()(nrow(.) / nrow(item$j0))),
   sum = lst(
-    long =
-      set_hdrs() |>
-        mutate(
-          hdrs = rowSums(pick(matches("hamd"))),
-          .after = visit,
-          .keep = "unused"
-        ) |>
-        left_join(.groupe, by = "numero") |>
-        drop_na(),
-    wide =
-      long |>
-        pivot_wider(
-          names_from = visit,
-          values_from = hdrs
-        )
+    long = set_hdrs() |>
+      mutate(
+        hdrs = rowSums(pick(matches("hamd"))),
+        .after = visit,
+        .keep = "unused"
+      ) |>
+      left_join(.groupe, by = "numero") |>
+      drop_na(),
+    wide = long |>
+      pivot_wider(
+        names_from = visit,
+        values_from = hdrs
+      )
   )
 )
 
@@ -103,7 +97,9 @@ hdrs <- lst(
 
 is_norm <- \(x) x %in% c(0:4)
 
-set_na <- \(x) mutate(x, across(matches("q"), ~ if_else(!. %in% c(0:4, NA), NA, .)))
+set_na <- \(x) {
+  mutate(x, across(matches("q"), ~ if_else(!. %in% c(0:4, NA), NA, .)))
+}
 
 scl <- lst(
   base = .base$scl,
@@ -113,41 +109,36 @@ scl <- lst(
     rc = nrow(base) * col
   ),
   value = lst(
-    data =
-      base |>
-        filter(!if_all(matches("q"), is_norm)) |>
-        select(!where(~ unique(is_norm(.)) |> is_true())),
-    total =
-      base |>
-        pivot_longer(cols = matches("q")) |>
-        mutate(across(c(visit, value), ~ factor(.))) |>
-        filter(!is_norm(value)),
+    data = base |>
+      filter(!if_all(matches("q"), is_norm)) |>
+      select(!where(~ unique(is_norm(.)) |> is_true())),
+    total = base |>
+      pivot_longer(cols = matches("q")) |>
+      mutate(across(c(visit, value), ~ factor(.))) |>
+      filter(!is_norm(value)),
     ab = drop_na(total),
-    na =
-      total |>
-        filter(is.na(value)) |>
-        mutate(
-          visit = str_extract(visit, "(?<=j)\\d+"),
-          value = 1
-        )
-  ),
-  dim =
-    names(.dim) |>
-      map(
-        ~ base |>
-          set_na() |>
-          transmute("{.}" := rowSums(across(.dim[[.]]), na.rm = TRUE))
-      ) |>
-      list_cbind(),
-  join =
-    base[c("numero", "visit")] |>
-      bind_cols(dim) |>
-      left_join(
-        y = hdrs$sum$long,
-        by = join_by(numero, visit)
+    na = total |>
+      filter(is.na(value)) |>
+      mutate(
+        visit = str_extract(visit, "(?<=j)\\d+"),
+        value = 1
       )
+  ),
+  dim = names(.dim) |>
+    map(
+      ~ base |>
+        set_na() |>
+        transmute("{.}" := rowSums(across(.dim[[.]]), na.rm = TRUE))
+    ) |>
+    list_cbind(),
+  join = base[c("numero", "visit")] |>
+    bind_cols(dim) |>
+    left_join(
+      y = hdrs$sum$long,
+      by = join_by(numero, visit)
+    )
 )
 
 ### AUTO EXEC ------------------------------------------------------------------
 
-# auto_exec()
+auto_exec()

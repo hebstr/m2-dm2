@@ -1,43 +1,32 @@
 ---
 title: "DM2 : Statistiques avancées"
-
 subtitle: "M2MSR 2023-2024"
-
 author:
-  name: "**Groupe 11** - Julien ELICES-DIEZ"
+  name: "Groupe 11 - Julien ELICES-DIEZ"
   email: "ju.diez@protonmail.com"
-
 date: last-modified
-
-filters:
-  - add-code-files
-
 format:
-  hebstr-template-html:
+  hebstr-html:
     code-tools:
-      source: https://codeberg.org/hebstr/m2_dm2/src/branch/main/
-  hebstr-template-typst: default
+      source: https://github.com/hebstr/m2-dm2
 ---
 
 ```{r}
 #| label: setup
 #| include: false
-
 library(knitr)
 
-quiet <- TRUE
-
-conflicted::conflict_prefer("filter", "dplyr")
+options(easy_out.quiet = TRUE)
 
 source(here::here("scripts", "_setup.R"))
-
 auto_exec()
 
 .pal <- opts$palette
 
-.subtitle_hdrs <-
-glue("Parmi les {nrow(hdrs$item$j0)} sujets évalués à J0,
-     {nrow(hdrs$item$j56)} ({hdrs$pct$j56}) étaient évalués à J56.")
+.subtitle_hdrs <- str_glue(
+  "Parmi les {nrow(hdrs$item$j0)} sujets évalués à J0,
+  {nrow(hdrs$item$j56)} ({hdrs$pct$j56}) étaient évalués à J56."
+)
 ```
 
 # Énoncé {.unnumbered .unlisted}
@@ -77,10 +66,9 @@ Aucun large language model n'est utilisé pour la rédaction du code ou du texte
 # Le contenu de ce devoir n'est pas corrigé
 :::
 
-::: {add-from=scripts/_setup.R code-line-numbers="true" code-filename="_setup.R"}
-```r
-```
-:::
+{{< script .Rprofile >}}
+
+{{< script scripts/_setup.R >}}
 
 # Composition de l'échelle HDRS
 
@@ -105,7 +93,6 @@ Il contenait **`r sum(.count$missing)`** valeurs manquantes.
 ```{r}
 #| echo: true
 #| code-fold: false
-
 .hdrs |>
   filter(if_any(matches("hamd"), is.na)) |>
   gt_qmd()
@@ -124,8 +111,10 @@ La proportion de sujets suivis dans le temps était comme suit, avec pour réfé
 ```{r}
 hdrs$pct |>
   gt_qmd() |>
-  tab_style(style = cell_text(align = "center"),
-            locations = list(cells_column_labels(), cells_body()))
+  tab_style(
+    style = cell_text(align = "center"),
+    locations = list(cells_column_labels(), cells_body())
+  )
 ```
 
 \
@@ -138,15 +127,16 @@ Pour une meilleure lisibilité, les 17 items de l'échelle HDRS étaient représ
 
 ```{r}
 .title_hdrs_items <-
-map(c(n2 = 2, n4 = 4),
-    ~ glue("Distribution des items cotés de 0 à {.} sur l'échelle HDRS aux
-           temps {str_color('J0', .pal[1])} et {str_color('J56', .pal[2])}."))
+  map(
+    c(n2 = 2, n4 = 4),
+    ~ glue(
+      "Distribution des items cotés de 0 à {.} sur l'échelle HDRS aux
+           temps {str_color('J0', .pal[1])} et {str_color('J56', .pal[2])}."
+    )
+  )
 ```
 
-::: {add-from=scripts/fig_hdrs.R code-line-numbers="true" code-filename="fig_hdrs.R"}
-```r
-```
-:::
+{{< script scripts/fig_hdrs.R >}}
 
 ```{r}
 #| label: fig-hdrs-items-n2
@@ -154,8 +144,7 @@ map(c(n2 = 2, n4 = 4),
 #| fig-cap: !expr '.title_hdrs_items$n2'
 #| lightbox:
 #|   group: fig-hdrs-items
-
-include_graphics("output/fig_hdrs_items.n2.png")
+include_graphics("output/fig_hdrs_items_n2.png")
 ```
 
 ```{r}
@@ -164,8 +153,7 @@ include_graphics("output/fig_hdrs_items.n2.png")
 #| fig-cap: !expr '.title_hdrs_items$n4'
 #| lightbox:
 #|   group: fig-hdrs-items
-
-include_graphics("output/fig_hdrs_items.n4.png")
+include_graphics("output/fig_hdrs_items_n4.png")
 ```
 
 De manière approximative on observait une tendance générale à un déplacement vers des scores plus bas à J56, avec parfois un phénomène d'inversion pour certains items.
@@ -179,30 +167,25 @@ Ci-dessous une représentation de la distribution du score HDRS global, obtenu p
 #| label: fig-hdrs-global
 #| out-width: 70%
 #| fig-cap: !expr '.title_hdrs_global'
-
 .title_hdrs_global <-
-str_fig(title =
-          "Distribution du score global sur l'échelle HDRS aux temps
+  str_fig(
+    title = "Distribution du score global sur l'échelle HDRS aux temps
           {str_color('J0', .pal[1])} et {str_color('J56', .pal[2])}.",
-        note =
-          "Le score global provenait de l'addition des scores obtenus
+    note = "Le score global provenait de l'addition des scores obtenus
            aux 17 items pour chaque sujet. {.subtitle_hdrs}",
-        qmd = TRUE)
+    qmd = TRUE
+  )
 
 include_graphics("output/fig_hdrs_global.png")
 ```
 
 On pouvait constater une tendance à la baisse du score global. Le calcul des paramètres à toutes les visites mettait en évidence le caractère graduel de cette évolution au cours du temps.
 
-::: {add-from=scripts/tbl_hdrs.R code-line-numbers="true" code-filename="tbl_hdrs.R"}
-```r
-```
-:::
+{{< script scripts/tbl_hdrs.R >}}
 
 ```{r}
 #| label: tbl-hdrs
 #| tbl-cap: Distribution du score global sur l'échelle HDRS en fonction du temps.
-
 tbl_hdrs
 ```
 
@@ -224,19 +207,17 @@ Une **analyse en composantes principales (PCA)** a été réalisée dans le but 
 
 Une première étape consistait à déterminer les valeurs propres associées à chaque composante. Il a été choisi de retranscrire celles-ci en *pourcentage de variance capturée* par souci d'en faciliter l'interprétation.
 
-::: {add-from=scripts/fig_scree.R code-line-numbers="true" code-filename="fig_scree.R"}
-```r
-```
-:::
+{{< script scripts/fig_scree.R >}}
 
 ```{r}
 #| label: fig-scree
 #| out-width: 75%
 #| fig-cap: !expr '.title_scree'
-
 .title_scree <-
-glue("Pourcentage de variance capturée par chaque composante, échelle HDRS à
-     {str_color('J0', .pal[1])} et {str_color('J56', .pal[2])}.")
+  glue(
+    "Pourcentage de variance capturée par chaque composante, échelle HDRS à
+     {str_color('J0', .pal[1])} et {str_color('J56', .pal[2])}."
+  )
 
 include_graphics("output/fig_scree.png")
 ```
@@ -258,38 +239,41 @@ L'objectif suivant était de procéder, pour chaque visite, à une analyse facto
 
 ```{r}
 .title_contrib <-
-list(pc =
-       glue("{str_color('Pourcentage de contribution', opts$color$w[2])}
-            des items de l'échelle HDRS à chaque composante principale (PC), à J0."),
-     sort =
-       list(J0 = "aux composantes principales (PC)",
-            J56 = "à la première composante principale") |>
-         imap(~ glue("Classement des items de l'échelle HDRS selon leur
-                     {str_color('contribution', opts$color$w[2])} {.x}, à {.y}.")))
+  list(
+    pc = glue(
+      "{str_color('Pourcentage de contribution', opts$color$w[2])}
+            des items de l'échelle HDRS à chaque composante principale (PC), à J0."
+    ),
+    sort = list(
+      J0 = "aux composantes principales (PC)",
+      J56 = "à la première composante principale"
+    ) |>
+      imap(
+        ~ glue(
+          "Classement des items de l'échelle HDRS selon leur
+                     {str_color('contribution', opts$color$w[2])} {.x}, à {.y}."
+        )
+      )
+  )
 ```
 
 ### Analyse factorielle à J0
 
 L'idée était de voir si pouvaient émerger certains patterns en fonction de la contribution des items à chaque composante, ce qui aurait potentiellement pour effet de révéler la présence de sous-scores dans l'échelle.
 
-::: {add-from=scripts/tbl_contrib.R code-line-numbers="true" code-filename="tbl_contrib.R"}
-```r
-```
-:::
+{{< script scripts/tbl_contrib.R >}}
 
 ::: {layout-ncol=2}
 ```{r}
 #| label: tbl-contrib-pc
 #| tbl-cap: !expr '.title_contrib$pc'
-
 tbl_contrib_pc
 ```
 
 ```{r}
 #| label: tbl-contrib-sort-j0
 #| tbl-cap: !expr '.title_contrib$sort$J0'
-
-tbl_contrib_sort.j0
+tbl_contrib_sort$j0
 ```
 :::
 
@@ -304,8 +288,7 @@ La même analyse à J56, facilitée par la présence d'un seul facteur, permetta
 ```{r}
 #| label: tbl-contrib-sort-j56
 #| tbl-cap: !expr '.title_contrib$sort$J56'
-
-tbl_contrib_sort.j56
+tbl_contrib_sort$j56
 ```
 
 Comme on pouvait s'y attendre, l'item *"humeur dépressive"* apparaissait comme étant le plus contributif à la PC1. À noter que les autres items les plus contributifs étaient compatibles avec des caractéristiques souvent retrouvées dans la dépression.
@@ -314,28 +297,23 @@ Comme on pouvait s'y attendre, l'item *"humeur dépressive"* apparaissait comme 
 
 Une PCA a été réalisée à partir de l'ensemble du jeu de données, à visée exploratoire *voire expérimentale* (il est donc à noter que les points individuels n'étaient pas indépendants).
 
-::: {add-from=scripts/fig_pca.R code-line-numbers="true" code-filename="fig_pca.R"}
-```r
-```
-:::
+{{< script scripts/fig_pca.R >}}
 
 ```{r}
 #| label: fig-pca
 #| fig-cap: !expr '.title_pca'
-
-.title_pca <-
-str_fig(title =
-          "Analyse en composantes principales sur la base du score HDRS,
+.title_pca <- str_fig(
+  title = "Analyse en composantes principales sur la base du score HDRS,
            par item, de {str_color('J0', colorspace::darken(.ind$color$low, 0.07))}
            à {str_color('J56', .ind$color$high)}.",
-        note =
-          "Les sujets étaient évalués sur 17 items à {.ind$j_str}. {.subtitle_hdrs}
+  note = "Les sujets étaient évalués sur 17 items à {.ind$j_str}. {.subtitle_hdrs}
            Le nombre associé à la composante est le pourcentage de variance
            capturée par celle-ci. Les vecteurs correspondent aux items et sont
            représentés proportionnellement à leur
            {str_color('contribution à la première composante', .ind$color$vctr)}.",
-        acro = acro_str(opts$acro$PC),
-        qmd = TRUE)
+  acro = acro_str(opts$acro$PC),
+  qmd = TRUE
+)
 
 include_graphics("output/fig_pca.png")
 ```
@@ -353,17 +331,22 @@ La fiabilité *(consistance interne)* des items de l'échelle HDRS à J0 et J56 
 
 ```{r}
 #| echo: true
-
 hdrs$visit$str |>
-  map(~ hdrs$item[[.]] |>
-        drop_na() |>
-        select(matches("hamd")) |>
-        ltm::cronbach.alpha(CI = TRUE)) |>
+  map(
+    ~ hdrs$item[[.]] |>
+      drop_na() |>
+      select(matches("hamd")) |>
+      ltm::cronbach.alpha(CI = TRUE)
+  ) |>
   set_names(hdrs$visit$str) |>
-  imap(~ tibble(visit = .y,
-                estimate = .x$alpha,
-                conf.low = .x$ci[1],
-                conf.high = .x$ci[2])) |>
+  imap(
+    ~ tibble(
+      visit = .y,
+      estimate = .x$alpha,
+      conf.low = .x$ci[1],
+      conf.high = .x$ci[2]
+    )
+  ) |>
   list_c() |>
   merge_estim_ci(name = "alpha {opts$ci$label}") |>
   gt_qmd()
@@ -406,31 +389,34 @@ Les observations portaient sur **`r scl$n$row` sujets** évalués sur **`r scl$n
 Le jeu de données se présentait au format long, soit **une ligne par visite**.
 
 ```{r}
-.title_value <-
-list(ab = c("aberrantes", "fréquence"),
-     na = c("manquantes", "visite")) |>
-  imap(~ list(title =
-                glue("Distribution des valeurs {.x[1]} dans l'échelle SCL90,
-                     par {.x[2]}."),
-              note =
-                glue("Le recueil comportait {scl$n$col} items pour un total de
-                     {nrow(scl$base)} visites parmi {scl$n$row} sujets, soit un
-                     total de {scl$n$rc} items. Au total, {nrow(.value[[.y]]$n)}
-                     ({.value[[.y]]$p}) valeurs {.x[1]} étaient retrouvées.
-                     {.value[[.y]]$obs$n} sujets sur {scl$n$row} ({.value[[.y]]$obs$p})
-                     et {.value[[.y]]$item$n} items distincts sur {scl$n$col}
-                     ({.value[[.y]]$item$p}) étaient concernés par au moins une
-                     occurrence. Les pourcentages ont pour dénominateur le nombre
-                     total de valeurs {.x[1]}.")))
+.title_value <- list(
+  ab = c("aberrantes", "fréquence"),
+  na = c("manquantes", "visite")
+) |>
+  imap(
+    ~ list(
+      title = str_glue(
+        "Distribution des valeurs {.x[1]} dans l'échelle SCL90, par {.x[2]}."
+      ),
+      note = str_glue(
+        "Le recueil comportait {scl$n$col} items pour un total de
+        {nrow(scl$base)} visites parmi {scl$n$row} sujets, soit un
+        total de {scl$n$rc} items. Au total, {nrow(.value_data[[.y]]$n)}
+        ({.value_data[[.y]]$p}) valeurs {.x[1]} étaient retrouvées.
+        {.value_data[[.y]]$obs$n} sujets sur {scl$n$row} ({.value_data[[.y]]$obs$p})
+        et {.value_data[[.y]]$item$n} items distincts sur {scl$n$col}
+        ({.value_data[[.y]]$item$p}) étaient concernés par au moins une
+        occurrence. Les pourcentages ont pour dénominateur le nombre
+        total de valeurs {.x[1]}."
+      )
+    )
+  )
 ```
 
 Toute valeur numérique différente d'un entier compris entre 0 et 4 pouvait être qualifiée de *valeur aberrante*.
-Il y avait un total de **`r nrow(.value$ab$n)` (`r .value$ab$p`) valeurs aberrantes**, dont voici le détail :
+Il y avait un total de **`r nrow(.value_data$ab$n)` (`r .value_data$ab$p`) valeurs aberrantes**, dont voici le détail :
 
-::: {add-from=scripts/fig_value.R code-line-numbers="true" code-filename="fig_value.R"}
-```r
-```
-:::
+{{< script scripts/fig_value.R >}}
 
 ```{r}
 #| label: fig-value-ab
@@ -438,19 +424,18 @@ Il y avait un total de **`r nrow(.value$ab$n)` (`r .value$ab$p`) valeurs aberran
 #| fig-cap: !expr '.title_value_ab'
 #| lightbox:
 #|   group: fig-value
+.title_value_ab <- str_fig(
+  title = .title_value$ab$title,
+  note = ("Était jugée aberrante toute valeur numérique différente d'un
+    entier compris entre 0 et 4 inclus . {.title_value$ab$note} Aucune valeur
+    décimale n'était retrouvée."),
+  qmd = TRUE
+)
 
-.title_value_ab <-
-str_fig(title = .title_value$ab$title,
-        note =
-          "Était jugée aberrante toute valeur numérique différente d'un entier
-           compris entre 0 et 4 inclus . {.title_value$ab$note} Aucune valeur décimale
-           n'était retrouvée.",
-        qmd = TRUE)
-
-include_graphics("output/fig_value.ab.png")
+include_graphics("output/fig_value_ab.png")
 ```
 
-Il y avait un total de **`r nrow(.value$na$n)` (`r .value$na$p`) valeurs manquantes**, dont voici le détail :
+Il y avait un total de **`r nrow(.value_data$na$n)` (`r .value_data$na$p`) valeurs manquantes**, dont voici le détail :
 
 ```{r}
 #| label: fig-value-na
@@ -458,38 +443,38 @@ Il y avait un total de **`r nrow(.value$na$n)` (`r .value$na$p`) valeurs manquan
 #| fig-cap: !expr '.title_value_na'
 #| lightbox:
 #|   group: fig-value
+.title_value_na <- str_fig(
+  title = .title_value$na$title,
+  note = .title_value$na$note,
+  qmd = TRUE
+)
 
-.title_value_na <-
-str_fig(title = .title_value$na$title,
-        note = .title_value$na$note,
-        qmd = TRUE)
-
-include_graphics("output/fig_value.na.png")
+include_graphics("output/fig_value_na.png")
 ```
 
 ::: callout-important
 # Gestion des valeurs aberrantes
 
-Les `r nrow(.value$ab$n)` valeurs aberrantes présentes dans l'échelle SCL90 ont été converties en valeurs manquantes.
+Les `r nrow(.value_data$ab$n)` valeurs aberrantes présentes dans l'échelle SCL90 ont été converties en valeurs manquantes.
 :::
 
 ```{r}
 .n_obs <- nrow(set_na(scl$base) |> drop_na())
 .p_obs <- label_p()(.n_obs / nrow(scl$base))
-.sum_ab_na <- nrow(.value$ab$n) + nrow(.value$na$n)
+.sum_ab_na <- nrow(.value_data$ab$n) + nrow(.value_data$na$n)
 .p_ab_na <- label_p()(.sum_ab_na / scl$n$rc)
 ```
 
 Après ce traitement, le jeu de données était composé de **`r .n_obs` (`r .p_obs`) observations complètes**.\
 Il y avait au total :
 
-- `r nrow(.value$ab$n)` + `r nrow(.value$na$n)` = **`r .sum_ab_na` (`r .p_ab_na`) valeurs manquantes**
+- `r nrow(.value_data$ab$n)` + `r nrow(.value_data$na$n)` = **`r .sum_ab_na` (`r .p_ab_na`) valeurs manquantes**
 - **`r n_distinct(scl$value$data$numero)` sujets** et **`r length(scl$value$data |> select(matches("q")))` items distincts** étaient concernés par au moins une occurrence
 
 Les `r scl$n$col` items ont ensuite été regroupés par dimensions puis additionnés afin de constituer des sous-scores.
 
 ```{r}
-gt_qmd(scl$join, head = 5)
+gt_qmd(scl$join, top_n = 5)
 ```
 
 \
@@ -500,17 +485,13 @@ Ce jeu de données final ne contenait **aucune valeur manquante**.
 
 Les **coefficients de corrélation r de Pearson** ont été calculés pour chaque visite afin d'apprécier l'évolution entre J0 et J56.
 
-::: {add-from=scripts/fig_corr.R code-line-numbers="true" code-filename="fig_corr.R"}
-```r
-```
-:::
+{{< script scripts/fig_corr.R >}}
 
 ```{r}
 #| label: fig-corr
 #| out-width: 65%
 #| fig-cap: Coefficients de corrélation de Pearson entre les scores des dimensions de l'échelle SCL90 et le score global sur l'échelle HDRS, par visite.
 #| fig-cap-location: top
-
 include_graphics("output/fig_corr.png")
 ```
 
@@ -562,35 +543,35 @@ La méthode LOCF *(Last Observation Carried Forward)*, simple mais limitée, con
 
 ```{r}
 #| echo: true
-
-hdrs$locf <-
-lst(data =
-      hdrs$sum$wide |>
-        pivot_longer(cols = matches("j"),
-                     values_to = "hdrs",
-                     names_to = "visit") |>
-        group_by(numero) |>
-          fill(hdrs) |>
-          ungroup() |>
-        pivot_wider(names_from = visit,
-                    values_from = hdrs) |>
-        mutate(delta = j0 - j56) |>
-        select(groupe, delta),
-    mean =
-      data |>
-        tbl_summary(by = groupe,
-                    label = delta ~ "Δ J0 - J56",
-                    statistic = list(delta ~ "{mean}±{sd}"),
-                    digits = delta ~ 2) |>
-        add_p(test = list(delta ~ "t.test"),
-              test.args = all_tests("t.test") ~ list(var.equal = TRUE),
-              pvalue_fun = opts$pvalue$format) |>
-        add_stat_label(label = ~ names(opts$qt_stat$mean)),
-    lm = lst(fit = lm(delta ~ groupe, data),
-             tidy =
-               tidy(fit, conf.int = TRUE) |>
-                 merge_estim_ci() |>
-                 select(term, estimate_ci, p.value)))
+hdrs$locf <- lst(
+  data = hdrs$sum$wide |>
+    pivot_longer(cols = matches("j"), values_to = "hdrs", names_to = "visit") |>
+    group_by(numero) |>
+    fill(hdrs) |>
+    ungroup() |>
+    pivot_wider(names_from = visit, values_from = hdrs) |>
+    mutate(delta = j0 - j56) |>
+    select(groupe, delta),
+  mean = data |>
+    tbl_summary(
+      by = groupe,
+      label = delta ~ "Δ J0 - J56",
+      statistic = list(delta ~ "{mean}±{sd}"),
+      digits = delta ~ 2
+    ) |>
+    add_p(
+      test = list(delta ~ "t.test"),
+      test.args = all_tests("t.test") ~ list(var.equal = TRUE),
+      pvalue_fun = opts$pvalue$format
+    ) |>
+    add_stat_label(label = ~ names(opts$qt_stat$mean)),
+  lm = lst(
+    fit = lm(delta ~ groupe, data),
+    tidy = tidy(fit, conf.int = TRUE) |>
+      merge_estim_ci() |>
+      select(term, estimate_ci, p.value)
+  )
+)
 ```
 
 ```{r}
@@ -612,15 +593,15 @@ Pour rappel le jeu de données comportait **`r .l` observations sans données ma
 Ce nombre pouvait aussi être calculé à partir d'une transposition du format long au format large, laissant ainsi apparaître l'ensemble des valeurs manquantes.
 
 ```{r}
+#| echo: true
+#| code-fold: false
 hdrs$sum$wide
 ```
 
 ```{r}
 #| echo: true
 #| code-fold: false
-
-.j_na <-
-hdrs$sum$wide |>
+.j_na <- hdrs$sum$wide |>
   labelled::look_for("j") |>
   dplyr::pull(missing)
 
@@ -697,27 +678,23 @@ Le modèle consistait à expliquer l'évolution du score HDRS global en fonction
 
 ```{r}
 #| echo: true
-
-hdrs$lme <-
-lst(data =
-      hdrs$sum$long |>
-        group_by(numero) |>
-        mutate(visit = seq(visit)),
-    fit =
-      nlme::lme(hdrs ~ groupe * visit,
-                random = ~ visit | numero,
-                data = data),
-    tidy =
-      lst(data =
-            tidy(fit, conf.int = TRUE) |>
-              split(~ effect),
-          fix =
-            data$fixed |>
-              merge_estim_ci() |>
-              select(term, estimate_ci, p.value),
-          ran =
-            data$ran_pars |>
-              select(group, term, estimate)))
+hdrs$lme <- lst(
+  data = hdrs$sum$long |>
+    group_by(numero) |>
+    mutate(visit = seq(visit)),
+  fit = nlme::lme(
+    fixed = hdrs ~ groupe * visit,
+    random = ~ visit | numero,
+    data = data
+  ),
+  tidy = lst(
+    data = tidy(fit, conf.int = TRUE) |> split(~effect),
+    fix = data$fixed |>
+      merge_estim_ci() |>
+      select(term, estimate_ci, p.value),
+    ran = data$ran_pars |> select(group, term, estimate)
+  )
+)
 ```
 
 Les paramètres des effets fixes étaient accompagnés de leur intervalle de confiance à 95%.
@@ -730,8 +707,7 @@ Les paramètres des effets fixes étaient accompagnés de leur intervalle de con
 hdrs$lme$tidy$fix |>
   mutate(p.value = style_pvalue(p.value, 2)) |>
   gt_qmd() |>
-  tab_style(style = cell_text(align = "right"),
-            locations = cells_body(p.value))
+  tab_style(style = cell_text(align = "right"), locations = cells_body(p.value))
 ```
 
 \
@@ -747,8 +723,7 @@ hdrs$lme$tidy$ran |>
 \
 
 ```{r}
-.est <-
-hdrs$lme$tidy$data$fixed$estimate |>
+.est <- hdrs$lme$tidy$data$fixed$estimate |>
   round(2) |>
   abs()
 ```
@@ -773,23 +748,18 @@ Cette méthode nécessitait la création d'un évènement binaire nommé *"répo
 
 L'analyse présentée ci-dessous rapportait donc pour chaque groupe le risque de non-survenue de l'évènement, simplement qualifiée de *"non-réponse au traitement"*, en fonction du temps.
 
-::: {add-from=scripts/fig_surv.R code-line-numbers="true" code-filename="fig_surv.R"}
-```r
-```
-:::
+{{< script scripts/fig_surv.R >}}
 
 ```{r}
 #| label: fig-surv
 #| fig-cap: !expr '.title_surv'
-
-.title_surv <-
-str_fig(title =
-          "Comparaison de la probabilité de non-réponse au traitement
+.title_surv <- str_fig(
+  title = "Comparaison de la probabilité de non-réponse au traitement
            entre les groupes {str_color(0, .pal[1])} et {str_color(1, .pal[2])}.",
-        note =
-          "Les courbes étaient construites suivant la méthode de Kaplan-Meier.
+  note = "Les courbes étaient construites suivant la méthode de Kaplan-Meier.
            {str_color('Délai médian avant réponse au traitement', opts$color$w[2])}.",
-        qmd = TRUE)
+  qmd = TRUE
+)
 
 include_graphics("output/fig_surv.png")
 ```
@@ -810,13 +780,13 @@ Les données associées à chaque groupe étaient les suivantes :
 # [Groupe 0]{.nb}
 
 ```{r}
-gt_qmd(hdrs$surv$model$tte$tidy$"0")
+gt_qmd(.hdrs_surv_model_tte$tidy$"0")
 ```
 
 # [Groupe 1]{.cb1}
 
 ```{r}
-gt_qmd(hdrs$surv$model$tte$tidy$"1")
+gt_qmd(.hdrs_surv_model_tte$tidy$"1")
 ```
 
 :::
@@ -828,7 +798,7 @@ Un **modèle de Cox** a été réalisé afin de quantifier le risque de non-rép
 Les hypothèses suivantes ayant été vérifiées :
 
 - Nombre d'évènements suffisamment grand
-- Hypothèse de proportionnalité des risques non rejetée au risque $\alpha$ = 5% [(p = `r round(cox.zph(hdrs$surv$model$cox$obj)$table[2,3], 3)`)]{.sm-em}
+- Hypothèse de proportionnalité des risques non rejetée au risque $\alpha$ = 5% [(p = `r round(cox.zph(.hdrs_surv_model_cox$obj)$table[2,3], 3)`)]{.sm-em}
 
 Le **hazard ratio** ainsi estimé et présenté sur le graphique fournissait une information qui pouvait être formulée de deux manières équivalentes :
 
@@ -854,8 +824,13 @@ Plusieurs méthodes ont été utilisées pour répondre à la question principal
 
 Ces différentes méthodes ont mené à la conclusion que, en moyenne, la réponse au traitement était significativement meilleure dans le groupe 0 que dans le groupe 1.
 
+\
+
+***
+
 # Session {.unnumbered .unlisted}
 
 ```{r}
+#| echo: true
 devtools::session_info(pkgs = "attached")
 ```
