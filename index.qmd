@@ -7,7 +7,7 @@ author:
 lang: fr
 date: last-modified
 format:
-  hebstr-html:
+  hebstr-doc-html:
     code-tools:
       source: https://github.com/hebstr/m2-dm2
 ---
