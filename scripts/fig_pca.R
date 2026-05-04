@@ -7,7 +7,7 @@ pc_pct <- \(data, x) {
     tidy("eigenvalues") |>
     mutate(p = label_p()(percent))
 
-  lst(p = glue("{data$p[{x}]}"), str = glue("PC{x} ({p})"))
+  lst(p = str_glue("{data$p[{x}]}"), str = str_glue("PC{x} ({p})"))
 }
 
 ### FIG VAR --------------------------------------------------------------------

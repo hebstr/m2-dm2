@@ -13,7 +13,7 @@ set_opts(
 ### IMPORT ---------------------------------------------------------------------
 
 easy_read <- \(x) {
-  glue("data/{x}.xls") |>
+  str_glue("data/{x}.xls") |>
     readxl::read_excel(na = c("", "ND")) |>
     set_names(tolower) |>
     mutate(numero = factor(numero))

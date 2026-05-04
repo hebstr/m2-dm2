@@ -4,6 +4,7 @@ subtitle: "M2MSR 2023-2024"
 author:
   name: "Groupe 11 - Julien ELICES-DIEZ"
   email: "ju.diez@protonmail.com"
+lang: fr
 date: last-modified
 format:
   hebstr-html:
@@ -129,7 +130,7 @@ Pour une meilleure lisibilité, les 17 items de l'échelle HDRS étaient représ
 .title_hdrs_items <-
   map(
     c(n2 = 2, n4 = 4),
-    ~ glue(
+    ~ str_glue(
       "Distribution des items cotés de 0 à {.} sur l'échelle HDRS aux
            temps {str_color('J0', .pal[1])} et {str_color('J56', .pal[2])}."
     )
@@ -213,11 +214,10 @@ Une première étape consistait à déterminer les valeurs propres associées à
 #| label: fig-scree
 #| out-width: 75%
 #| fig-cap: !expr '.title_scree'
-.title_scree <-
-  glue(
-    "Pourcentage de variance capturée par chaque composante, échelle HDRS à
+.title_scree <- str_glue(
+  "Pourcentage de variance capturée par chaque composante, échelle HDRS à
      {str_color('J0', .pal[1])} et {str_color('J56', .pal[2])}."
-  )
+)
 
 include_graphics("output/fig_scree.png")
 ```
@@ -238,23 +238,22 @@ Ce premier résultat laissait présumer d'un caractère davantage [**multidimens
 L'objectif suivant était de procéder, pour chaque visite, à une analyse factorielle sur la base des dimensions respectivement sélectionnées.
 
 ```{r}
-.title_contrib <-
-  list(
-    pc = glue(
-      "{str_color('Pourcentage de contribution', opts$color$w[2])}
-            des items de l'échelle HDRS à chaque composante principale (PC), à J0."
-    ),
-    sort = list(
-      J0 = "aux composantes principales (PC)",
-      J56 = "à la première composante principale"
-    ) |>
-      imap(
-        ~ glue(
-          "Classement des items de l'échelle HDRS selon leur
-                     {str_color('contribution', opts$color$w[2])} {.x}, à {.y}."
-        )
+.title_contrib <- list(
+  pc = str_glue(
+    "{str_color('Pourcentage de contribution', opts$color$w[2])} des items
+     de l'échelle HDRS à chaque composante principale (PC), à J0."
+  ),
+  sort = list(
+    J0 = "aux composantes principales (PC)",
+    J56 = "à la première composante principale"
+  ) |>
+    imap(
+      ~ str_glue(
+        "Classement des items de l'échelle HDRS selon leur
+        {str_color('contribution', opts$color$w[2])} {.x}, à {.y}."
       )
-  )
+    )
+)
 ```
 
 ### Analyse factorielle à J0
@@ -832,5 +831,5 @@ Ces différentes méthodes ont mené à la conclusion que, en moyenne, la répon
 
 ```{r}
 #| echo: true
-devtools::session_info(pkgs = "attached")
+sessioninfo::session_info(pkgs = "attached")
 ```

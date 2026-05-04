@@ -73,7 +73,7 @@ fig_surv <- .hdrs_surv_model_tte$obj |>
   geom_text(
     data = .hdrs_surv_model_cox$tidy,
     mapping = aes(
-      label = glue(
+      label = str_glue(
         "{str} {opts$ci$label}{opts$sep$int}{estimate_ci}
         Log rank {p.value}"
       )

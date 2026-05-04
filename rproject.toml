@@ -1,6 +1,6 @@
 [project]
 name = "m2-dm2"
-r_version = "4.5"
+r_version = "4.6"
 
 repositories = [
     {alias = "CRAN", url = "https://packagemanager.posit.co/cran/latest"},
@@ -14,7 +14,6 @@ dependencies = [
     "broom.mixed",
     "ggsurvfit",
     "corrr",
-    "rsvg",
     "ltm",
-    "devtools",
+    "sessioninfo",
 ]

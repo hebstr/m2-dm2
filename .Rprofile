@@ -1,21 +1,21 @@
 source("rv/scripts/rvr.R")
 source("rv/scripts/activate.R")
-source("~/.Rprofile")
 
+library(conflicted)
 library(tidyverse)
-library(rlang, warn.conflicts = FALSE)
-library(glue)
+library(rlang)
 library(labelled)
 library(gtsummary)
 library(gt)
-library(scales, warn.conflicts = FALSE)
+library(scales)
 library(broom.mixed)
 library(survival)
 library(ggsurvfit)
 library(hebstr)
 
+print(conflict_scout())
+conflicts_prefer(dplyr::filter)
+
 update_geom_defaults("text", list(family = "Luciole"))
 
 lang_fr()
-
-conflicted::conflicts_prefer(dplyr::filter, .quiet = FALSE)
